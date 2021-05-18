@@ -1,6 +1,6 @@
 /* Pogramación interactiva
  * Autor: Diego Fabián Ledesma - 1928161
- * Miniproyecto 2: Juego de palabras. */
+ * Miniproyecto 3: Juego de palabras. */
 
 package juegoDePalabras;
 
