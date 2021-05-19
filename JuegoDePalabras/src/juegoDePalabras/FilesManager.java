@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ManagerFiles {
+public class FilesManager {
 
 	private FileReader fileRead;
 	private BufferedReader input;
@@ -37,7 +37,7 @@ public class ManagerFiles {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block 
 			e.printStackTrace();
 		} finally {
 			try {

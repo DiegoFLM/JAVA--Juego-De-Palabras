@@ -12,11 +12,10 @@ public class WordGenerator {
 	//Attributes
 	private String[] wordBank, words;
 	private Random random;
-	private int totalWords, auxGenerateWords, auxComparison;
+	private int auxGenerateWords, auxComparison;
 	
 	public WordGenerator() {
 		random = new Random();
-		totalWords = 60;
 		wordBank = new String[] 	{"INMENSO", "OFICIAL", "ASPIRAR", "CAMILLA", "SEMILLA", "INFANTIL", "INFLAR", "PASADO", "CONDUCIR", "MORSA",
 								"PREGUNTAR", "PRESIDENTE", "LONGITUD", "AVIONES", "OBSERVATORIO", "ARQUITECTURA", "MAIZ", "CAMPESINO", "HELADO", "CEPILLO",
 								"CUEVA", "BEBIDA", "SIEMBRA", "SACACORCHOS", "DIENTE", "TERCIARIO", "CALDERA", "DEFENSA", "BLUSA", "LIVIANO",
@@ -30,7 +29,7 @@ public class WordGenerator {
 	public String[] generateWords(int numberOfWords) {
 		words = new String[numberOfWords];
 		for (int j = 0; j < numberOfWords;) {
-			auxGenerateWords = random.nextInt(totalWords);
+			auxGenerateWords = random.nextInt(wordBank.length);
 			auxComparison = 0;
 			for(int k = 0; k < (j - 1); k++) {
 				if (wordBank[auxGenerateWords] == words[k]) {
