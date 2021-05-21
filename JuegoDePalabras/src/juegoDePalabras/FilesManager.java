@@ -23,7 +23,7 @@ public class FilesManager {
 		String chain = "";
 		
 		try {
-			fileRead = new FileReader("src/resources/lecture");
+			fileRead = new FileReader("src/resources/gameData");
 			input = new BufferedReader(fileRead);
 			
 			String text = input.readLine();
@@ -48,8 +48,31 @@ public class FilesManager {
 			}
 		}
 		
-		return chain;
+		return chain; 
 		
 	}
 
+	
+	public void writeFile(String line) {
+		try {
+			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwited or just get
+																		text added to the existing. False means overwite*/
+			output = new BufferedWriter(fileWriter);
+			
+			output.write(line);
+			output.newLine();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

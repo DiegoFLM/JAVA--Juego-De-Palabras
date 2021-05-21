@@ -126,6 +126,8 @@ generateWords(int numberOfWords)
     <panel_attributes>FilesManager
 --
 --
+readFile()
+writeFile(String line)
 </panel_attributes>
     <additional_attributes/>
   </element>
