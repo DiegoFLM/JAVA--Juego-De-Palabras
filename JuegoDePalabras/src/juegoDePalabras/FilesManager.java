@@ -18,7 +18,7 @@ public class FilesManager {
 	private FileWriter fileWriter;
 	private BufferedWriter output;
 	
-	public String readFile() {
+	public String readPlayers() {
 		
 		String chain = "";
 		
@@ -29,7 +29,7 @@ public class FilesManager {
 			String text = input.readLine();
 			
 			while(text != null) {
-				chain += "\n" + text;
+				chain += text + "\n";
 				text = input.readLine();
 			}
 			
@@ -49,11 +49,12 @@ public class FilesManager {
 		}
 		
 		return chain; 
-		
 	}
+	
+	
 
 	
-	public void writeFile(String line) {
+	public void writePlayers(String line) {
 		try {
 			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwited or just get
 																		text added to the existing. False means overwite*/
@@ -64,7 +65,7 @@ public class FilesManager {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		} finally {
 			try {
 				output.close();
@@ -72,6 +73,56 @@ public class FilesManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	
+	public String getWords() {
+		String words = "";
+		
+		try {
+			fileRead = new FileReader("src/resources/wordBank");
+			input = new BufferedReader(fileRead);
+			
+			String word = input.readLine();
+			
+			while (word != null) {
+				words += word + "\n";
+				word = input.readLine();
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return words;	
+	}
+	
+	
+	public void deletePlayers() {
+		try {
+			String nothing = "";
+			fileWriter = new FileWriter("src/resources/gameData", false);
+			
+			output = new BufferedWriter(fileWriter);
+			
+			output.write(nothing);
+			output.newLine();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
