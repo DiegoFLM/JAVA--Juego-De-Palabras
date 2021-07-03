@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
+
 public class FilesManager {
 
 	private FileReader fileRead;
@@ -18,6 +20,8 @@ public class FilesManager {
 	private FileWriter fileWriter;
 	private BufferedWriter output;
 	
+	/*Players are stored with a format: Each line corresponds to a player, followed by a space and then the level of the player. This
+	 * method returns a String with the specified format*/
 	public String readPlayers() {
 		
 		String chain = "";
@@ -53,15 +57,30 @@ public class FilesManager {
 	
 	
 
-	
-	public void writePlayers(String line) {
+	/*Players are stored with a format: Each line corresponds to a player, followed by a space and then the level of the player.
+	 * This method receives the name of a player and check if the player is already stored, if so, it returns the level of the player; 
+	 * if not, adds the player to the file with level 1 and returns 1.*/
+	public int writePlayer(String line) {
 		try {
 			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwited or just get
 																		text added to the existing. False means overwite*/
 			output = new BufferedWriter(fileWriter);
 			
-			output.write(line);
-			output.newLine();
+			String[] players = this.readPlayers().split("\n");
+			
+			boolean aux = true;
+			for (int j = 0; j < players.length; j++) {
+				//System.out.println(players[j].split(" ")[0]);
+				if (line.equals(players[j].split(" ")[0]) ) {
+					aux = false;
+					return Integer.parseInt(players[j].split(" ")[1]);
+				}
+			}
+			
+			if (aux) {
+				output.write(line + " " + "1");
+				output.newLine();
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -74,6 +93,7 @@ public class FilesManager {
 				e.printStackTrace();
 			}
 		}
+		return 1;
 	}
 	
 	

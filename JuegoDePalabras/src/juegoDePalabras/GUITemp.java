@@ -57,7 +57,7 @@ public class GUITemp extends JFrame {
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
 			}else {
-				filesManager.writePlayers(line.getText());
+				filesManager.writePlayer(line.getText());
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
 			}
