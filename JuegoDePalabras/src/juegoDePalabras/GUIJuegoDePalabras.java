@@ -185,9 +185,13 @@ public class GUIJuegoDePalabras extends JFrame {
 				line.setText("");
 				}
 			}else if(e.getSource() == bReset){
-				filesManager.deletePlayers();
+				//filesManager.deletePlayers();
+				control.startGame("a");
+				control.increaseLevel();
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
+				
+				
 			}		 
 		}
 	}

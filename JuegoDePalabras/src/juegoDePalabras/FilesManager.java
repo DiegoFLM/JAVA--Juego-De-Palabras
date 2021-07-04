@@ -62,8 +62,8 @@ public class FilesManager {
 	 * if not, adds the player to the file with level 1 and returns 1.*/
 	public int writePlayer(String line) {
 		try {
-			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwited or just get
-																		text added to the existing. False means overwite*/
+			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwritten or just get
+																		text added to the existing. False means overwrite*/
 			output = new BufferedWriter(fileWriter);
 			
 			String[] players = this.readPlayers().split("\n");
@@ -143,6 +143,28 @@ public class FilesManager {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void testWriting(String data) {
+		try {
+			fileWriter = new FileWriter("src/resources/gameData", false); /*The second parameter determine if the file will be overwritten or just get
+																		text added to the existing. False means overwrite*/
+			output = new BufferedWriter(fileWriter);
+			
+			output.write(data);
+			output.newLine();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace(); 
+		} finally {
+			try {
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
