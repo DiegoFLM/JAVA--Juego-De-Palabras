@@ -40,7 +40,7 @@ public class WordGenerator {
 			auxGenerateWords = random.nextInt(wordBank.length);
 			auxComparison = 0;
 			for(int k = 0; k < (j - 1); k++) {
-				if (wordBank[auxGenerateWords] == words[k]) {
+				if (wordBank[auxGenerateWords].equals(words[k])) {
 					auxComparison++;
 					break;
 				}

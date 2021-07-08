@@ -146,10 +146,11 @@ public class FilesManager {
 		}
 	}
 	
-	public void testWriting(String data) {
+	/*Overwrites the gameData file with the specified String.*/
+	public void overWrite(String data) {
 		try {
 			fileWriter = new FileWriter("src/resources/gameData", false); /*The second parameter determine if the file will be overwritten or just get
-																		text added to the existing. False means overwrite*/
+																		text added to the existing file. False means overwrite.*/
 			output = new BufferedWriter(fileWriter);
 			
 			output.write(data);
