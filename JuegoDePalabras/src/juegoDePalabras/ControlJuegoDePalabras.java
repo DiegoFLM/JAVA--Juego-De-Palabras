@@ -97,6 +97,40 @@ public class ControlJuegoDePalabras {
 		return level;
 	}
 	
+	public int getSeries() {
+		return (1 + series);
+	}
+	
+
+	/*If the player lost, returns 0; If the player passed to the next level, returns 1.*/
+	public int checkGameState() {
+		if (level == 1) {
+			if (this.howManyRightWords() >= 7) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (this.howManyRightWords() >= ((level + 1) * 3)) {
+				return 1;
+			}else {
+				return 0;
+			}
+		}
+	}
+	
+	
+	public int howManyRightWords() {
+		int howManyRW = 0;
+		for (int j = 0; j < rightWords.length; j++) {
+			if (!rightWords[j].equals(null)) {
+				howManyRW++;
+			}else {
+				break;
+			}
+		}
+		return howManyRW;
+	}
 	
 	/*Defines how many words will appear in each series based on the specified level.*/
 	private int calculateWords(int lvl) {

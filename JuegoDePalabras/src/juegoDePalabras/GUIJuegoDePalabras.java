@@ -30,22 +30,22 @@ import misComponentes.Titulos;
  * */
 public class GUIJuegoDePalabras extends JFrame {
 	
-	private JTextField line;
-	private JTextArea textArea;
+	private JTextField line, tfPlayerWord;
+	private JTextArea textArea, taRightWords;
 	private FilesManager filesManager;
 	private JLabel lAux1, lInstEnterPlayer;
-	private JPanel pStart, pOptions, pMain, pGame, pWords, pPlaying, pStats, pPlayer, pLevel;
-	private JButton bReset, bExit;
+	private JPanel pStart, pOptions, pMain, pGame, pWords, pWriting, pStats, pPlayer, pLevel;
+	private JButton bReset, bExit, bFinishSeries;
 	private GridBagConstraints constraints;
 	private CardLayout cardMain, cardGame;
-	private Titulos tGameTitle, tCurrentWord, tAux1, tLevel, tSeries;
+	private Titulos tGameTitle, tCurrentWord, tAux1, tLevel, tSeries, tTime;
 	
 	private ControlJuegoDePalabras control;
 	private String[] seriesWords;
 	private Listener listener;
-	private Timer timerWords;
+	private Timer timerWords, timerSecond;
 	
-	private int intWordsCounter;
+	private int intWordsCounter, secondsLeft;
 	
 	
 	public GUIJuegoDePalabras() {
@@ -141,8 +141,72 @@ public class GUIJuegoDePalabras extends JFrame {
 		pGame.add("pWords", pWords);
 		
 		
-		//Timer
+		//Timers
 		timerWords = new Timer(2000, listener);
+		timerSecond = new Timer(1000, listener); // 100 s
+		
+		
+		//Writing interface
+		pWriting = new JPanel();
+		pWriting.setLayout(new GridBagLayout());
+		tfPlayerWord = new JTextField();
+		tfPlayerWord.addActionListener(listener);
+		taRightWords = new JTextArea(10, 30);
+		secondsLeft = 60;
+		tLevel = new Titulos("Nivel: " + control.getLevel() + "     ", 30, new Color (0, 0, 0));
+		tSeries = new Titulos("Serie: " + control.getSeries() + "     ", 30, new Color (0, 0, 0));
+		tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
+		bFinishSeries = new JButton("Finalizar serie");
+		
+		constraints.gridx = 0;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER; 
+		pWriting.add(tLevel, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tSeries, constraints);
+		
+		constraints.gridx = 2;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tTime, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tfPlayerWord, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(taRightWords, constraints);
+		
+		constraints.gridx = 2;		
+ 		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 2;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(bFinishSeries, constraints);
+		
+		pGame.add("pWriting", pWriting);
 		
 		
 		//main JPanel
@@ -183,6 +247,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		constraints.anchor = GridBagConstraints.CENTER;
 		this.add(pOptions, constraints);	
 		
+		this.writingInterface();
 	}
 
 	
@@ -230,6 +295,73 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 	
+	private void writingInterface() {
+		pStart.removeAll();
+		pWriting.removeAll();
+		tLevel.revalidate();
+		tSeries.revalidate();
+		tTime.revalidate();
+		
+		pWriting.setLayout(new GridBagLayout());
+		secondsLeft--;
+		tLevel = new Titulos("Nivel: " + control.getLevel() + "     ", 30, new Color (0, 0, 0));
+		tSeries = new Titulos("Serie: " + control.getSeries() + "     ", 30, new Color (0, 0, 0));
+		tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
+		
+		timerSecond.start();
+		
+		constraints.gridx = 0;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tLevel, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tSeries, constraints);
+		
+		constraints.gridx = 2;		
+ 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tTime, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(tfPlayerWord, constraints);
+		
+		constraints.gridx = 1;		
+ 		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(taRightWords, constraints);
+		
+		constraints.gridx = 2;		
+ 		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 2;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		pWriting.add(bFinishSeries, constraints);
+		
+		cardMain.show(pMain, "pGame");
+		cardGame.show(pGame, "pWriting");
+	}
+	
 	
 	
 	
@@ -261,14 +393,19 @@ public class GUIJuegoDePalabras extends JFrame {
 			}else if(e.getSource() == timerWords) {
 				timerWords.stop();
 				if (intWordsCounter == (seriesWords.length - 1) ) {
-					//Start player timer and show writing interface.
-					JOptionPane.showMessageDialog(null, "Finished");
+					//Start timerSecond and show writing interface.         
+					writingInterface();
+				}else if(e.getSource() == timerSecond){
+					timerSecond.stop();
+					if (secondsLeft == 1) {
+						
+					}else {
+						writingInterface();
+					}
 				}else {
 					nextWord();
 				}
-				
 			}
 		}
 	}
-	
 }
