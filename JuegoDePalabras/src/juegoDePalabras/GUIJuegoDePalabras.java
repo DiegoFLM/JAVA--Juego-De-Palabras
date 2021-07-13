@@ -142,14 +142,14 @@ public class GUIJuegoDePalabras extends JFrame {
 		
 		
 		//Timers
-		timerWords = new Timer(2000, listener);
+		timerWords = new Timer(500, listener);
 		timerSecond = new Timer(1000, listener); // 100 s
 		
 		
 		//Writing interface
 		pWriting = new JPanel();
 		pWriting.setLayout(new GridBagLayout());
-		tfPlayerWord = new JTextField();
+		tfPlayerWord = new JTextField(30);
 		tfPlayerWord.addActionListener(listener);
 		taRightWords = new JTextArea(10, 30);
 		secondsLeft = 60;
@@ -247,7 +247,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		constraints.anchor = GridBagConstraints.CENTER;
 		this.add(pOptions, constraints);	
 		
-		this.writingInterface();
+		//this.writingInterface();
 	}
 
 	
@@ -342,6 +342,8 @@ public class GUIJuegoDePalabras extends JFrame {
 		constraints.anchor = GridBagConstraints.CENTER;
 		pWriting.add(tfPlayerWord, constraints);
 		
+		
+		taRightWords.setText(control.getRightWords());
 		constraints.gridx = 1;		
  		constraints.gridy = 2;
 		constraints.gridwidth = 1;
@@ -360,6 +362,9 @@ public class GUIJuegoDePalabras extends JFrame {
 		
 		cardMain.show(pMain, "pGame");
 		cardGame.show(pGame, "pWriting");
+		
+		tfPlayerWord.setFocusable(true);
+		tfPlayerWord.grabFocus();
 	}
 	
 	
@@ -377,18 +382,17 @@ public class GUIJuegoDePalabras extends JFrame {
 					JOptionPane.showMessageDialog(null, "Invalid player name");
 					line.setText("");
 				}else {
-				filesManager.writePlayer(line.getText());
+				filesManager.writePlayer(line.getText().toUpperCase());
 				textArea.setText(filesManager.readPlayers());
-				seriesWords = control.startGame(line.getText());
+				seriesWords = control.startGame(line.getText().toUpperCase());
 				startSeries();
 				line.setText("");
 				}
 			}else if(e.getSource() == bReset){
-				//filesManager.deletePlayers();
-				//control.increaseLevel();
-				
+				filesManager.deletePlayers();
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
+				System.exit(0);
 				
 			}else if(e.getSource() == timerWords) {
 				timerWords.stop();
@@ -404,6 +408,31 @@ public class GUIJuegoDePalabras extends JFrame {
 					}
 				}else {
 					nextWord();
+				}
+			}else if (e.getSource() == tfPlayerWord) {
+				switch (control.verifyWord(tfPlayerWord.getText().toUpperCase())) {
+				case 0:
+					JOptionPane.showMessageDialog(null, 0);
+					tfPlayerWord.setText("");
+					break;
+				
+				case 1:
+					taRightWords.setText(control.getRightWords());
+					tfPlayerWord.setText("");
+					JOptionPane.showMessageDialog(null, "1");
+					break;
+					
+				case 2:
+					//next Series
+					JOptionPane.showMessageDialog(null, "2");
+					taRightWords.setText(control.getRightWords());
+					tfPlayerWord.setText("");
+					break;
+					
+					
+				default:
+					JOptionPane.showMessageDialog(null, "none");
+					break;
 				}
 			}
 		}

@@ -3,6 +3,10 @@
  * Miniproyecto 3: Juego de palabras. */
 package juegoDePalabras;
 
+import java.util.IllegalFormatCodePointException;
+
+import javax.swing.JOptionPane;
+
 public class ControlJuegoDePalabras {
 
 	private WordGenerator wordGen;
@@ -25,7 +29,6 @@ public class ControlJuegoDePalabras {
 	public String[] startGame(String player) {
 		currentPlayer = player;
 		series = 0;
-		rightWords = new String[calculateWords(level)];
 		strPlayers = filesManager.readPlayers();
 		for (int j = 0; j < strPlayers.split("\n").length; j++) {
 			if (strPlayers.split("\n")[j].split(" ")[0].equals(currentPlayer) ) {
@@ -33,17 +36,18 @@ public class ControlJuegoDePalabras {
 				
 			}
 		}
-		//System.out.println(level);
+		rightWords = new String[calculateWords(level)];
 		words = wordGen.generateWords(calculateWords(level));
 		//wordGen.printToConsole();
 		return words;
 	}
 	
 	
-	public String[] nextSeries() {
+	private String[] nextSeries() {
 		if (series == 0) {
+			
 			series = 1;
-		}else {
+		} else {
 			series = 0;
 			this.increaseLevel();
 		}
@@ -52,32 +56,41 @@ public class ControlJuegoDePalabras {
 		return words;
 	}
 	
+	
 	/*Verifies if the writtenWord is right, if so, returns 1, if its wrong, returns 0. 
 	 * But if the player just wrote all the series words right, it returns 2.*/
 	public int verifyWord(String writtenWord) {
 		for (int j = 0; j < words.length; j++) {
 			if (words[j].equals(writtenWord)) {
+				//JOptionPane.showMessageDialog(null, rightWords.length);
 				for (int k = 0; k < rightWords.length; k++) {
-					if (rightWords[k].equals(writtenWord)) {
-						return 0; //The writtenWord had been written already.
-					}else if(rightWords[k].equals(null)) {
+					//JOptionPane.showMessageDialog(null, rightWords.length);
+					if(rightWords[k] == null) {
 						if (k == (rightWords.length - 1)) {
+							rightWords[k] = words[j];
+							this.nextSeries();
 							return 2; //All the series words have been written.
 						}else {
 							rightWords[k] = words[j];
 							return 1; //The writtenWord is right, but there are still words that haven't been written.
+						}
+					} else {
+						if (rightWords[k].equals(writtenWord)) {
+							return 0; //The writtenWord had been written already.
 						}
 					}
 				}
 			}
 		}
 		return 0; //The writtenWord is wrong.
-	} 
+	}
+	
 	
 	
 	/*Increase in 1 the level of a player in the gameData file and in the attribute level of the object of this class.*/
 	private void increaseLevel() {
 		level++;
+		series = 0;
 		strPlayers = "";
 		arrData = filesManager.readPlayers().split("\n");
 		
@@ -101,8 +114,21 @@ public class ControlJuegoDePalabras {
 		return (1 + series);
 	}
 	
+	public String getRightWords() {
+		String chainRW = "";
+		
+		for (int j = 0; j < rightWords.length; j++) {
+			if (rightWords[j] == null) {
+				break;
+			}
+			chainRW += rightWords[j] + "\n";
+		}
+		
+		return chainRW;
+	}
 
-	/*If the player lost, returns 0; If the player passed to the next level, returns 1.*/
+	/*Determines if the player lost when the time for writing words is over;
+	 * If the player lost, returns 0; If the player passed to the next level, returns 1.*/
 	public int checkGameState() {
 		if (level == 1) {
 			if (this.howManyRightWords() >= 7) {
@@ -123,7 +149,7 @@ public class ControlJuegoDePalabras {
 	public int howManyRightWords() {
 		int howManyRW = 0;
 		for (int j = 0; j < rightWords.length; j++) {
-			if (!rightWords[j].equals(null)) {
+			if (!(rightWords[j] == null)) {
 				howManyRW++;
 			}else {
 				break;
