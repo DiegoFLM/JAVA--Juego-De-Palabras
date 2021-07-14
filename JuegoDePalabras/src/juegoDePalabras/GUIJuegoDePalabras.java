@@ -251,7 +251,8 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 
 	
-	private void startSeries(){
+	private void nextSeries(){
+		seriesWords = control.nextSeries();
 		intWordsCounter = 0;
 		tCurrentWord = new Titulos(seriesWords[intWordsCounter], 60, new Color (0, 0, 0));
 		timerWords.start();
@@ -384,9 +385,9 @@ public class GUIJuegoDePalabras extends JFrame {
 				}else {
 				filesManager.writePlayer(line.getText().toUpperCase());
 				textArea.setText(filesManager.readPlayers());
-				seriesWords = control.startGame(line.getText().toUpperCase());
-				startSeries();
+				control.startGame(line.getText().toUpperCase());
 				line.setText("");
+				nextSeries();
 				}
 			}else if(e.getSource() == bReset){
 				filesManager.deletePlayers();
@@ -399,14 +400,14 @@ public class GUIJuegoDePalabras extends JFrame {
 				if (intWordsCounter == (seriesWords.length - 1) ) {
 					//Start timerSecond and show writing interface.         
 					writingInterface();
-				}else if(e.getSource() == timerSecond){
+				}/*else if(e.getSource() == timerSecond){
 					timerSecond.stop();
 					if (secondsLeft == 1) {
-						
+															THIS CODE IS NEVER RUNNING
 					}else {
 						writingInterface();
 					}
-				}else {
+				}*/else {
 					nextWord();
 				}
 			}else if (e.getSource() == tfPlayerWord) {
@@ -419,7 +420,7 @@ public class GUIJuegoDePalabras extends JFrame {
 				case 1:
 					taRightWords.setText(control.getRightWords());
 					tfPlayerWord.setText("");
-					JOptionPane.showMessageDialog(null, "1");
+					//JOptionPane.showMessageDialog(null, "1");
 					break;
 					
 				case 2:
@@ -427,6 +428,8 @@ public class GUIJuegoDePalabras extends JFrame {
 					JOptionPane.showMessageDialog(null, "2");
 					taRightWords.setText(control.getRightWords());
 					tfPlayerWord.setText("");
+					
+					nextSeries();
 					break;
 					
 					
