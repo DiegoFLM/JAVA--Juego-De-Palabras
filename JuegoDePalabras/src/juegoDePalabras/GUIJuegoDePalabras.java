@@ -142,7 +142,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		
 		
 		//Timers
-		timerWords = new Timer(500, listener);
+		timerWords = new Timer(1000, listener);
 		timerSecond = new Timer(1000, listener); // 100 s
 		
 		
@@ -252,11 +252,13 @@ public class GUIJuegoDePalabras extends JFrame {
 
 	
 	private void nextSeries(){
+		timerSecond.stop();
 		seriesWords = control.nextSeries();
 		intWordsCounter = 0;
 		tCurrentWord = new Titulos(seriesWords[intWordsCounter], 60, new Color (0, 0, 0));
 		timerWords.start();
 		
+		//pWriting.removeAll();
 		pWords.removeAll();
 		pWords.setLayout(new GridBagLayout());
 		constraints.gridx = 0;		
@@ -297,14 +299,16 @@ public class GUIJuegoDePalabras extends JFrame {
 	
 	
 	private void writingInterface() {
+		secondsLeft--;
 		pStart.removeAll();
+		pWords.removeAll();
 		pWriting.removeAll();
 		tLevel.revalidate();
 		tSeries.revalidate();
 		tTime.revalidate();
 		
 		pWriting.setLayout(new GridBagLayout());
-		secondsLeft--;
+		
 		tLevel = new Titulos("Nivel: " + control.getLevel() + "     ", 30, new Color (0, 0, 0));
 		tSeries = new Titulos("Serie: " + control.getSeries() + "     ", 30, new Color (0, 0, 0));
 		tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
@@ -400,17 +404,36 @@ public class GUIJuegoDePalabras extends JFrame {
 				if (intWordsCounter == (seriesWords.length - 1) ) {
 					//Start timerSecond and show writing interface.         
 					writingInterface();
-				}/*else if(e.getSource() == timerSecond){
-					timerSecond.stop();
-					if (secondsLeft == 1) {
-															THIS CODE IS NEVER RUNNING
-					}else {
-						writingInterface();
-					}
-				}*/else {
+				}else {
 					nextWord();
 				}
+			}else if(e.getSource() == timerSecond){
+				timerSecond.stop();
+				if (secondsLeft == 1) {
+					if (control.getSeries() == 1)
+						nextSeries();
+					if (control.getSeries() == 2) {
+						switch (control.checkGameState()) {
+						case 0:
+							JOptionPane.showMessageDialog(null, "¡Perdiste!");
+							break;
+
+						case 1:
+							JOptionPane.showMessageDialog(null, "gameState: " + control.checkGameState());
+							nextSeries();
+							break;
+						}
+					}
+				} else {
+					//writingInterface();
+					secondsLeft--;
+					tTime.revalidate();
+					tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
+					pWriting.repaint();
+					timerSecond.start();
+				}
 			}else if (e.getSource() == tfPlayerWord) {
+				timerSecond.start();
 				switch (control.verifyWord(tfPlayerWord.getText().toUpperCase())) {
 				case 0:
 					JOptionPane.showMessageDialog(null, 0);
