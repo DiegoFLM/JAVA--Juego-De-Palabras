@@ -11,7 +11,7 @@ public class ControlJuegoDePalabras {
 
 	private WordGenerator wordGen;
 	private FilesManager filesManager;
-	private int level, series;
+	private int level, series, levelRW;
 	private String[] words, arrData, rightWords;
 	private String currentPlayer, strPlayers;
 	
@@ -22,6 +22,7 @@ public class ControlJuegoDePalabras {
 		level = -1;
 		currentPlayer = "";
 		rightWords = new String[0];
+		levelRW = 0;
 	}
 
 	/*Finds the level of the specified player. The player must exist in the file gameData in
@@ -29,6 +30,7 @@ public class ControlJuegoDePalabras {
 	public void startGame(String player) {
 		currentPlayer = player;
 		series = 0;
+		levelRW = 0;
 		strPlayers = filesManager.readPlayers();
 		for (int j = 0; j < strPlayers.split("\n").length; j++) {
 			if (strPlayers.split("\n")[j].split(" ")[0].equals(currentPlayer) ) {
@@ -62,13 +64,14 @@ public class ControlJuegoDePalabras {
 			if (words[j].equals(writtenWord)) {
 				//JOptionPane.showMessageDialog(null, rightWords.length);
 				for (int k = 0; k < rightWords.length; k++) {
-					//JOptionPane.showMessageDialog(null, rightWords.length);
 					if(rightWords[k] == null) {
 						if (k == (rightWords.length - 1)) {
 							rightWords[k] = words[j];
+							levelRW++;
 							return 2; //All the series words have been written.
 						}else {
 							rightWords[k] = words[j];
+							levelRW++;
 							return 1; //The writtenWord is right, but there are still words that haven't been written.
 						}
 					} else {
@@ -87,6 +90,7 @@ public class ControlJuegoDePalabras {
 	/*Increase in 1 the level of a player in both gameData file and the attribute level of the object of this class.*/
 	private void increaseLevel() {
 		level++;
+		levelRW = 0;
 		series = 1;
 		strPlayers = "";
 		arrData = filesManager.readPlayers().split("\n");
@@ -112,7 +116,7 @@ public class ControlJuegoDePalabras {
 	}
 	
 	/*Returns a string with each right word written by the user in a diferent line.*/
-	public String getRightWords() {
+	public String getSeriesRightWords(){
 		String chainRW = "";
 		
 		for (int j = 0; j < rightWords.length; j++) {
@@ -125,6 +129,10 @@ public class ControlJuegoDePalabras {
 		return chainRW; 
 	}
 	
+	public int getLevelRightWords() {
+		return levelRW;
+	}
+	
 	public String[] getWords() {
 		 return words;
 	}
@@ -133,13 +141,13 @@ public class ControlJuegoDePalabras {
 	 * If the player lost, returns 0; If the player passed to the next level, returns 1.*/
 	public int checkGameState() {
 		if (level == 1) {
-			if (this.howManyRightWords() >= 7) {
+			if (levelRW >= 7) {
 				return 1;
 			} else {
 				return 0;
 			}
 		} else {
-			if (this.howManyRightWords() >= ((level + 1) * 3)) {
+			if (levelRW >= ((level + 1) * 3)) {
 				return 1;
 			}else {
 				return 0;
@@ -148,7 +156,7 @@ public class ControlJuegoDePalabras {
 	}
 	
 	/*Calculates how many words will appear in each series based on the level.*/
-	public int howManyRightWords() {
+	/*private int howManySeriesRW() {
 		int howManyRW = 0;
 		for (int j = 0; j < rightWords.length; j++) {
 			if (!(rightWords[j] == null)) {
@@ -158,7 +166,8 @@ public class ControlJuegoDePalabras {
 			}
 		}
 		return howManyRW;
-	}
+	}*/
+	
 	
 	/*Defines how many words will appear in each series based on the specified level.*/
 	private int calculateWords() {
