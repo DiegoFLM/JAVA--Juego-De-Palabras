@@ -20,12 +20,11 @@ public class FilesManager {
 	private FileWriter fileWriter;
 	private BufferedWriter output;
 	
-	/*Players are stored with a format: Each line corresponds to a player, followed by a space and then the level of the player. This
-	 * method returns a String with the specified format*/
+	/*Players are stored in gameData with a format: Each line corresponds to a player's name, followed by a space and then the level of 
+	 * the player. 	This method returns a String with the same format.*/
 	public String readPlayers() {
 		
 		String chain = "";
-		
 		try {
 			fileRead = new FileReader("src/resources/gameData");
 			input = new BufferedReader(fileRead);
@@ -36,7 +35,6 @@ public class FilesManager {
 				chain += text + "\n";
 				text = input.readLine();
 			}
-			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +49,6 @@ public class FilesManager {
 				e.printStackTrace();
 			}
 		}
-		
 		return chain; 
 	}
 	
@@ -62,15 +59,14 @@ public class FilesManager {
 	 * if not, adds the player to the file with level 1 and returns 1.*/
 	public int writePlayer(String line) {
 		try {
-			fileWriter = new FileWriter("src/resources/gameData", true); /*The second parameter determine if the file will be overwritten or just get
-																		text added to the existing. False means overwrite*/
+			fileWriter = new FileWriter("src/resources/gameData", true);/*The second parameter determines if the file will be 
+																		overwritten or just will get text added to the existing. 
+																		False means overwrite*/
 			output = new BufferedWriter(fileWriter);
-			
 			String[] players = this.readPlayers().split("\n");
 			
 			boolean aux = true;
 			for (int j = 0; j < players.length; j++) {
-				//System.out.println(players[j].split(" ")[0]);
 				if (line.equals(players[j].split(" ")[0]) ) {
 					aux = false;
 					return Integer.parseInt(players[j].split(" ")[1]);
@@ -96,7 +92,7 @@ public class FilesManager {
 		return 1;
 	}
 	
-	
+	/*Returns a string with all the words from the wordBank file, each word in a different line.*/
 	public String getWords() {
 		String words = "";
 		
@@ -130,11 +126,11 @@ public class FilesManager {
 	}
 	
 	
+	/*Deletes all the information about players and their levels in the gameData file.*/
 	public void deletePlayers() {
 		try {
 			String nothing = "";
 			fileWriter = new FileWriter("src/resources/gameData", false);
-			
 			output = new BufferedWriter(fileWriter);
 			
 			output.write(nothing);
@@ -146,11 +142,13 @@ public class FilesManager {
 		}
 	}
 	
+	
 	/*Overwrites the gameData file with the specified String.*/
 	public void overWrite(String data) {
 		try {
-			fileWriter = new FileWriter("src/resources/gameData", false); /*The second parameter determine if the file will be overwritten or just get
-																		text added to the existing file. False means overwrite.*/
+			fileWriter = new FileWriter("src/resources/gameData", false); /*The second parameter determines if the file will be 
+																		overwritten or just will get text added to the existing file. 
+																		False means overwrite.*/
 			output = new BufferedWriter(fileWriter);
 			
 			output.write(data);

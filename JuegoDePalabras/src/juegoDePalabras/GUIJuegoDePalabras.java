@@ -33,12 +33,12 @@ public class GUIJuegoDePalabras extends JFrame {
 	private JTextField line, tfPlayerWord;
 	private JTextArea textArea, taRightWords;
 	private FilesManager filesManager;
-	private JLabel lAux1, lInstEnterPlayer;
+	private JLabel lInstEnterPlayer;
 	private JPanel pStart, pOptions, pMain, pGame, pWords, pWriting, pStats, pPlayer, pLevel;
 	private JButton bReset, bExit, bFinishSeries;
 	private GridBagConstraints constraints;
 	private CardLayout cardMain, cardGame;
-	private Titulos tGameTitle, tCurrentWord, tAux1, tLevel, tSeries, tTime;
+	private Titulos tGameTitle, tCurrentWord, tLevel, tSeries, tTime;
 	
 	private ControlJuegoDePalabras control;
 	private String[] seriesWords;
@@ -62,6 +62,9 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 
+	/*Initializes main components and shows the starting frame in which the user can see player's names with it's level and
+	 * write a name either present on the list or not. If the name written by the user is in the list, the game starts
+	 * in the level of the selected player's name.*/
 	private void initGUI() {
 		this.getContentPane().setLayout(new GridBagLayout());;
         constraints = new GridBagConstraints();
@@ -123,7 +126,6 @@ public class GUIJuegoDePalabras extends JFrame {
 		//JPanel Words
 		pWords = new JPanel();
 		tCurrentWord = new Titulos("Words are shown here", 60, new Color (0, 0, 0));
-		//tAux1 = new Titulos("This should'n appear", 60, new Color (0, 0, 0));
 		pWords.setLayout(new GridBagLayout());
 		
 		constraints.gridx = 0;		
@@ -247,11 +249,10 @@ public class GUIJuegoDePalabras extends JFrame {
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;
 		this.add(pOptions, constraints);	
-		
-		//this.writingInterface();
 	}
 
 	
+	/*Passes to the next series and starts showing the words.*/
 	private void nextSeries(){
 		timerSecond.stop();
 		seriesWords = control.nextSeries();
@@ -260,10 +261,8 @@ public class GUIJuegoDePalabras extends JFrame {
 		
 		if (control.getSeries() == 1) {
 			secondsLeft = 20;
-			
 		}
 		timerWords.start();
-		
 		
 		
 		//pWriting.removeAll();
@@ -282,6 +281,7 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 	
+	/*Shows the next word of the series.*/
 	private void nextWord() {
 		intWordsCounter++;
 		tCurrentWord.revalidate();
@@ -306,6 +306,9 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 	
+	/*Shows the writing interface so the user can write the words he remembers, shows a list of the
+	 * right words written by the user in the current series, and shows the current level, series and the
+	 * remaining time for writing the words of the level. */
 	private void writingInterface() {
 		timerWords.stop();
 		secondsLeft--;
@@ -313,7 +316,6 @@ public class GUIJuegoDePalabras extends JFrame {
 		pStart.removeAll();
 		pWords.removeAll();
 		pWriting.removeAll();
-		//pWriting.removeAll();
 		tLevel.revalidate();
 		tSeries.revalidate();
 		tTime.revalidate();
@@ -393,7 +395,8 @@ public class GUIJuegoDePalabras extends JFrame {
 			// TODO Auto-generated method stub
 			if(e.getSource() == bExit) {
 				System.exit(0);
-			}else if (e.getSource() == line) {
+				
+			}else if (e.getSource() == line) { //The player just tried to write a series word.
 				if (line.getText().contains(" ") || line.getText().equals("")){
 					JOptionPane.showMessageDialog(null, "Invalid player name");
 					line.setText("");
@@ -404,29 +407,30 @@ public class GUIJuegoDePalabras extends JFrame {
 				line.setText("");
 				nextSeries();
 				}
-			}else if(e.getSource() == bReset){
+				
+			}else if(e.getSource() == bReset){ //Deletes all players information.
 				filesManager.deletePlayers();
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
 				System.exit(0);
 				
-			}else if(e.getSource() == bFinishSeries) {
-				
+			}else if(e.getSource() == bFinishSeries) {/*Ends the writing stage of the current series.*/
 				if ((control.checkGameState() == 0) && (control.getSeries() == 2)) {
 					JOptionPane.showMessageDialog(null, "¡Perdiste!");
 					System.exit(0);
 				}else {
 					nextSeries();
 				}
-			}else if(e.getSource() == timerWords) {
+				
+			}else if(e.getSource() == timerWords) {//The time for showing a specific series word is over.
 				timerWords.stop();
 				if (intWordsCounter == (seriesWords.length - 1) ) {
-					//writingInterface() starts timerSecond and show writing interface.         
 					writingInterface();
 				}else {
 					nextWord();
 				}
-			}else if(e.getSource() == timerSecond){
+				
+			}else if(e.getSource() == timerSecond){ //A second has passed in the writing stage.
 				timerSecond.stop();
 				if (secondsLeft == 1) {
 					if (control.getSeries() == 1)
@@ -445,7 +449,6 @@ public class GUIJuegoDePalabras extends JFrame {
 						}
 					}
 				} else {
-					//writingInterface();
 					secondsLeft--;
 					tTime.revalidate();
 					pWriting.remove(tTime);
@@ -463,26 +466,23 @@ public class GUIJuegoDePalabras extends JFrame {
 					
 					timerSecond.start();
 				}
-			}else if (e.getSource() == tfPlayerWord) {
+				
+			}else if (e.getSource() == tfPlayerWord) {//The player just wrote a word.
 				timerSecond.stop();
 				switch (control.verifyWord(tfPlayerWord.getText().toUpperCase())) {
 				case 0:
-					//JOptionPane.showMessageDialog(null, 0);
 					tfPlayerWord.setText("");
 					timerSecond.start();
-					//writingInterface();
 					break;
 				
 				case 1:
 					taRightWords.setText(control.getSeriesRightWords());
 					tfPlayerWord.setText("");
-					//JOptionPane.showMessageDialog(null, "1");
 					timerSecond.start();
 					break;
 					
 				case 2:
 					//next Series
-					JOptionPane.showMessageDialog(null, "2");
 					taRightWords.setText(control.getSeriesRightWords());
 					tfPlayerWord.setText("");
 					nextSeries();

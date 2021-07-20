@@ -3,10 +3,9 @@
  * Miniproyecto 3: Juego de palabras. */
 
 package juegoDePalabras;
-
 import java.util.Random;
 
-/*WordGenerator generates an array of unrepeated words in order to be used for a series of the game*/
+
 public class WordGenerator {
 	
 	//Attributes
@@ -18,22 +17,12 @@ public class WordGenerator {
 	
 	public WordGenerator() {
 		random = new Random();
-		//This wordBank is no longer used, now the words are stored in a text file called wordBank.
-		/*wordBank = new String[] 	{"INMENSO", "OFICIAL", "ASPIRAR", "CAMILLA", "SEMILLA", "INFANTIL", "INFLAR", "PASADO", "CONDUCIR", "MORSA",
-								"PREGUNTAR", "PRESIDENTE", "LONGITUD", "AVIONES", "OBSERVATORIO", "ARQUITECTURA", "MAIZ", "CAMPESINO", "HELADO", "CEPILLO",
-								"CUEVA", "BEBIDA", "SIEMBRA", "SACACORCHOS", "DIENTE", "TERCIARIO", "CALDERA", "DEFENSA", "BLUSA", "LIVIANO",
-								"MASA", "COBARDE", "SUBURBIO", "BORRACHO", "CUARTETO", "TARAREAR", "LENGUA", "LADRILLO", "BARANDA", "ACTORES",
-								"LIBERAR", "CLAVO", "LABERINTO", "CAPAS", "MUSEO", "HECHIZAR", "HEMISFERIOS", "DROGA", "AGUA", "BANDERA",
-								"PARED", "SIGNOS", "NAVEGAR", "VASCO", "AVISO", "RESPIRAR", "ESCAPE", "RESPALDO", "MODA", "ENSUCIAR" 
-								};	 */
-		
 		filesManager = new FilesManager();
 		auxWords = filesManager.getWords();
 		wordBank = auxWords.split("\n");
-		
 	}
 	
-	/*receives an integer and returns an array of unrepeated Strings (taken from the wordBank) with the size of the received integer.*/
+	/*receives an integer and returns an array of unrepeated words (taken from the wordBank file) with the size of the received integer.*/
 	public String[] generateWords(int numberOfWords) {
 		words = new String[numberOfWords];
 		for (int j = 0; j < numberOfWords;) {
@@ -54,6 +43,8 @@ public class WordGenerator {
 		return words;
 	}
 	
+	
+	/*Prints the words array to console.*/	
 	public void printToConsole() {
 		for (int j = 0; j < words.length; j++) {
 			System.out.println(words[j]);
