@@ -7,8 +7,13 @@ import java.util.IllegalFormatCodePointException;
 
 import javax.swing.JOptionPane;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ControlJuegoDePalabras. This class handles the game state, except for the time. Is responsible for 
+ * using the WordGenerator object, modify the players level in the gameData file using a FilesManager object, keeping track
+ * of the series and keeping track of the right words written by the player.
+ */
 public class ControlJuegoDePalabras {
-
 	private WordGenerator wordGen;
 	private FilesManager filesManager;
 	private int level, series, levelRW;
@@ -16,6 +21,9 @@ public class ControlJuegoDePalabras {
 	private String currentPlayer, strPlayers;
 	
 	
+	/**
+	 * Instantiates a new controlJuegoDePalabras.
+	 */
 	public ControlJuegoDePalabras() {
 		wordGen = new WordGenerator();
 		filesManager = new FilesManager();
@@ -26,8 +34,11 @@ public class ControlJuegoDePalabras {
 	}
 
 	
-	/*Identifies the player and finds the level of the specified player. The player must exist in the file gameData in
-	 * order to use this method.*/
+	/**
+	 * Finds the level of the specified player. The player must exist in the file gameData in order to use this method.
+	 *
+	 * @param player. Name of the player.
+	 */
 	public void startGame(String player) {
 		currentPlayer = player;
 		series = 0;
@@ -42,10 +53,18 @@ public class ControlJuegoDePalabras {
 	}
 	
 	
-	/*Passes to next series, increases the player level when needed and returns an array with the words of the next series.*/
+	
+	
+	
+	
+	/**
+	 * Passes to next series, increases the player level when needed.
+	 *
+	 * @return an String[] array with the words of the next series
+	 */
 	public String[] nextSeries() {
-		if (series == 0) { /*Series is equal to cero only afther the use of startGame(String player) method,
-							it doesn't have a meaning in the game.*/
+		if (series == 0) { /*Series is equal to zero only after the use of startGame(String player) method,
+							it doesn't have any meaning in the game.*/
 			series = 1;
 		}else if (series == 1) {
 			series = 2;
@@ -58,13 +77,16 @@ public class ControlJuegoDePalabras {
 	}
 	
 	
-	/*Verifies if the writtenWord is right, if it's right and there are words that haven't been written yet, returns 1. 
-	 * If the writtenWord is wrong, returns 0. 
-	 * But if the player just wrote all the series words right, it returns 2.*/
+	/**
+	 * Verifies if the writtenWord is right.
+	 *
+	 * @param writtenWord. The word written by the player.
+	 * @return if the written word is right and if there are words that haven't been written yet, returns 1. 
+	 * If the writtenWord is wrong, returns 0. If the player just wrote all the series words right, it returns 2.
+	 */
 	public int verifyWord(String writtenWord) {
 		for (int j = 0; j < words.length; j++) {
 			if (words[j].equals(writtenWord)) {
-				//JOptionPane.showMessageDialog(null, rightWords.length);
 				for (int k = 0; k < rightWords.length; k++) {
 					if(rightWords[k] == null) {
 						if (k == (rightWords.length - 1)) {
@@ -89,7 +111,9 @@ public class ControlJuegoDePalabras {
 	
 	
 	
-	/*Increases in 1 the level of a player in both gameData file and the attribute level of the object of this class.*/
+	/**
+	 * Increases in 1 the player's level in both gameData file and the attribute level of the object of this class.
+	 */
 	private void increaseLevel() {
 		level++;
 		levelRW = 0;
@@ -98,7 +122,7 @@ public class ControlJuegoDePalabras {
 		arrData = filesManager.readPlayers().split("\n");
 		
 		for (int d = 0; d < arrData.length; d++) {
-			/*This 'if' allows to avoid empty lines in the between players in the gameData file*/
+			//This 'if' allows to avoid empty lines in the between players in the gameData file
 			if (arrData[d].split(" ")[0].equals("")) {
 				continue;
 			}
@@ -118,15 +142,29 @@ public class ControlJuegoDePalabras {
 	}
 	
 	
+	/**
+	 * Gets the level.
+	 *
+	 * @return the level
+	 */
 	public int getLevel() {
 		return level;
 	}
 	
+	/**
+	 * Gets the series.
+	 *
+	 * @return the series
+	 */
 	public int getSeries() {
 		return (series);
 	}
 	
-	/*Returns a string with each right word written by the user in a diferent line.*/
+	/**
+	 * Gets the series right words.
+	 *
+	 * @return a string with each right word written by the user in a different line.
+	 */
 	public String getSeriesRightWords(){
 		String chainRW = "";
 		
@@ -140,21 +178,34 @@ public class ControlJuegoDePalabras {
 		return chainRW; 
 	}
 	
+	/**
+	 * Gets the number of right words written in the current level by the player.
+	 *
+	 * @return the number of right words written so far in the current level.
+	 */
 	public int getLevelRightWords() {
 		return levelRW;
 	}
 	
+	/**
+	 * Gets a String array with the series words.
+	 *
+	 * @return the series words.
+	 */
 	public String[] getWords() {
 		 return words;
 	}
 	
 
-	/*Determines if the player wrote enough words in the current level for not losing the game.
-	 *If the player lost, returns 0; If the player passed to the next level, returns 1.
-	 *It's function is to determine if the player lost when the time for writing words is over;*/
+	/**
+	 * Determines if the player wrote enough words in the current level for not losing the game.
+	 * It's function is to determine if the player lost when the time for writing words is over
+	 * 
+	 * @return If the player lost, returns 0; If the player passed to the next level, returns 1.
+	 */
 	public int checkGameState() {
 		if (level == 1) {
-			if (levelRW >= 7) {  /*levelRW is the number of right words that the player has written in the current level.*/
+			if (levelRW >= 7) {  //levelRW is the number of right words that the player has written in the current level.
 				return 1;
 			} else {
 				return 0;
@@ -169,7 +220,11 @@ public class ControlJuegoDePalabras {
 	}
 	
 	
-	/*Defines how many words will appear in the current series based on the specified level.*/
+	/**
+	 * Defines how many words will appear in the current series based on the specified level.
+	 *
+	 * @return the number of words corresponding to the current level.
+	 */
 	private int calculateWords() {
 		if (level >= 5) {
 			return 12;

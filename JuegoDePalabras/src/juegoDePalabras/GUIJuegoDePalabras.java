@@ -26,10 +26,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import misComponentes.Titulos;
 
-/*GUIJuegoDePalabras hereda de JFrame, y hace uso de la clase Titulos que se encuentra en el proyecto MisComponentes.
- * */
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GUIJuegoDePalabras. GUIJuegoDePalabras hereda de JFrame, y hace uso de la clase Titulos 
+ * que se encuentra en el proyecto MisComponentes.
+ */
 public class GUIJuegoDePalabras extends JFrame {
-	
 	private JTextField line, tfPlayerWord;
 	private JTextArea textArea, taRightWords;
 	private FilesManager filesManager;
@@ -39,15 +41,16 @@ public class GUIJuegoDePalabras extends JFrame {
 	private GridBagConstraints constraints;
 	private CardLayout cardMain, cardGame;
 	private Titulos tGameTitle, tCurrentWord, tLevel, tSeries, tTime;
-	
 	private ControlJuegoDePalabras control;
 	private String[] seriesWords;
 	private Listener listener;
 	private Timer timerWords, timerSecond;
-	
 	private int intWordsCounter, secondsLeft;
 	
 	
+	/**
+	 * Instantiates a new GUIJuegoDePalabras.
+	 */
 	public GUIJuegoDePalabras() {
 		initGUI();
 		
@@ -62,9 +65,11 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 
-	/*Initializes main components and shows the starting frame in which the user can see player's names with it's level and
+	/**
+	 * Initializes main components and shows the starting frame in which the user can see player's names with it's level and
 	 * write a name either present on the list or not. If the name written by the user is in the list, the game starts
-	 * in the level of the selected player's name.*/
+	 * in the level of the selected player's name, if not, starts in level 1.
+	 */
 	private void initGUI() {
 		this.getContentPane().setLayout(new GridBagLayout());;
         constraints = new GridBagConstraints();
@@ -154,7 +159,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		tfPlayerWord = new JTextField(30);
 		tfPlayerWord.addActionListener(listener);
 		taRightWords = new JTextArea(10, 30);
-		secondsLeft = 20;
+		secondsLeft = 30;
 		tLevel = new Titulos("Nivel: " + control.getLevel() + "     ", 30, new Color (0, 0, 0));
 		tSeries = new Titulos("Serie: " + control.getSeries() + "     ", 30, new Color (0, 0, 0));
 		tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
@@ -252,7 +257,9 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 
 	
-	/*Passes to the next series and starts showing the words.*/
+	/**
+	 * Passes to the next series and starts showing the words.
+	 */
 	private void nextSeries(){
 		timerSecond.stop();
 		seriesWords = control.nextSeries();
@@ -260,7 +267,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		tCurrentWord = new Titulos(seriesWords[intWordsCounter], 60, new Color (0, 0, 0));
 		
 		if (control.getSeries() == 1) {
-			secondsLeft = 20;
+			secondsLeft = 30;
 		}
 		timerWords.start();
 		
@@ -306,9 +313,12 @@ public class GUIJuegoDePalabras extends JFrame {
 	}
 	
 	
-	/*Shows the writing interface so the user can write the words he remembers, shows a list of the
+
+	/*
+	 * Shows the writing interface so the user can write the words he remembers, shows a list of the
 	 * right words written by the user in the current series, and shows the current level, series and the
-	 * remaining time for writing the words of the level. */
+	 * remaining time for writing the words of the level. 
+	 * */
 	private void writingInterface() {
 		timerWords.stop();
 		secondsLeft--;
@@ -388,15 +398,23 @@ public class GUIJuegoDePalabras extends JFrame {
 	
 	
 	
+	/**
+	 * The Class Listener.
+	 */
 	private class Listener implements ActionListener{
 
+		/**
+		 * Action performed.
+		 *
+		 * @param e the e
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if(e.getSource() == bExit) {
 				System.exit(0);
 				
-			}else if (e.getSource() == line) { //The player just tried to write a series word.
+			}else if (e.getSource() == line) { //The user wrote a player name
 				if (line.getText().contains(" ") || line.getText().equals("")){
 					JOptionPane.showMessageDialog(null, "Invalid player name");
 					line.setText("");

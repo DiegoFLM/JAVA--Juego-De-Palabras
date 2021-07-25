@@ -11,17 +11,25 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
 
 
+/**
+ * Class FilesManager. This class is responsible for storing in and reading from the text files gameData and WordBank.*/
 public class FilesManager {
 
 	private FileReader fileRead;
 	private BufferedReader input;
 	private FileWriter fileWriter;
 	private BufferedWriter output;
+	int level;
 	
-	/*Players are stored in gameData with a format: Each line corresponds to a player's name, followed by a space and then the level of 
-	 * the player. 	This method returns a String with the same format.*/
+	/**
+	 * ReadPlayers. Players are stored in gameData with a format: Each line corresponds to a player's name, followed by a space and then the level of 
+	 * the player. 	
+	 *
+	 * @return a String with the same format.
+	 */
 	public String readPlayers() {
 		
 		String chain = "";
@@ -56,26 +64,40 @@ public class FilesManager {
 
 	/*Players are stored with a format: Each line corresponds to a player, followed by a space and then the level of the player.
 	 * This method receives the name of a player and check if the player is already stored, if so, it returns the level of the player; 
-	 * if not, adds the player to the file with level 1 and returns 1.*/
-	public int writePlayer(String line) {
+	 * if not, adds the player to the file with level 1 and returns 1. This method also makes sure there are no empty lines.
+	 * 
+	 * @param name. The players name.
+	 * @return the level of the player.
+	 * */
+	public int writePlayer(String name) {
 		try {
-			fileWriter = new FileWriter("src/resources/gameData", true);/*The second parameter determines if the file will be 
+			String players ="" + this.readPlayers();
+			fileWriter = new FileWriter("src/resources/gameData", false);/*The second parameter determines if the file will be 
 																		overwritten or just will get text added to the existing. 
 																		False means overwrite*/
 			output = new BufferedWriter(fileWriter);
-			String[] players = this.readPlayers().split("\n");
+			String actualizedPlayers = new String();
+			actualizedPlayers = "";
+			level = -1;
 			
 			boolean aux = true;
-			for (int j = 0; j < players.length; j++) {
-				if (line.equals(players[j].split(" ")[0]) ) {
+			
+			for (int j = 0; j < players.split("\n").length; j++) {
+				if (name.equals(players.split("\n")[j].split(" ")[0]) ) { //The name is already stored.
 					aux = false;
-					return Integer.parseInt(players[j].split(" ")[1]);
+					level = Integer.parseInt(players.split("\n")[j].split(" ")[1]);
+				} else if (players.split("\n")[j].equals(null) || players.split("\n")[j].equals("")) {
+					continue;
 				}
+				actualizedPlayers += players.split("\n")[j] + "\n";
 			}
 			
-			if (aux) {
-				output.write(line + " " + "1");
-				output.newLine();
+			if (aux) {	//The name entered is new.
+				actualizedPlayers += name + " " + "1" + "\n";
+				output.write(actualizedPlayers);
+				level = 1;
+			} else {
+				output.write(actualizedPlayers);
 			}
 			
 		} catch (IOException e) {
@@ -89,10 +111,12 @@ public class FilesManager {
 				e.printStackTrace();
 			}
 		}
-		return 1;
+		return level;
 	}
 	
-	/*Returns a string with all the words from the wordBank file, each word in a different line.*/
+	/* Read all the words from the wordBank file.
+	 * 
+	 * @return a String with all the words from the wordBank file, each word in a different line.*/
 	public String getWords() {
 		String words = "";
 		
@@ -143,7 +167,8 @@ public class FilesManager {
 	}
 	
 	
-	/*Overwrites the gameData file with the specified String.*/
+	/*Overwrites the gameData file with the specified String.
+	 * @param data. Is a String in the right format that will replace the current information in the gameData file*/
 	public void overWrite(String data) {
 		try {
 			fileWriter = new FileWriter("src/resources/gameData", false); /*The second parameter determines if the file will be 
