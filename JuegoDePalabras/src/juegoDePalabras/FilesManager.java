@@ -13,9 +13,10 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-
+//TODO: Auto-generated Javadoc
 /**
- * Class FilesManager. This class is responsible for storing in and reading from the text files gameData and WordBank.*/
+ * The Class FilesManager. This class is responsible for storing in and reading from the text files gameData and WordBank.
+ */
 public class FilesManager {
 
 	private FileReader fileRead;

@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"juegoDePalabras","l":"ControlJuegoDePalabras"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"juegoDePalabras","l":"ControlJuegoDePalabras"},{"p":"juegoDePalabras","l":"FilesManager"},{"p":"juegoDePalabras","l":"GUIJuegoDePalabras"},{"p":"juegoDePalabras","l":"MainJuegoDePalabras"},{"p":"juegoDePalabras","l":"WordGenerator"}];updateSearchResults();
