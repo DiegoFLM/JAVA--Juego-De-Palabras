@@ -34,10 +34,11 @@ import misComponentes.Titulos;
 public class GUIJuegoDePalabras extends JFrame {
 	private JTextField line, tfPlayerWord;
 	private JTextArea textArea, taRightWords;
+	private JScrollPane scroll;
 	private FilesManager filesManager;
 	private JLabel lInstEnterPlayer;
 	private JPanel pStart, pOptions, pMain, pGame, pWords, pWriting, pStats, pPlayer, pLevel;
-	private JButton bReset, bExit, bFinishSeries;
+	private JButton bReset, bExit, bFinishSeries, bRestart;
 	private GridBagConstraints constraints;
 	private CardLayout cardMain, cardGame;
 	private Titulos tGameTitle, tCurrentWord, tLevel, tSeries, tTime;
@@ -117,7 +118,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		
 		textArea = new JTextArea(10, 30);
 		textArea.setText(filesManager.readPlayers());
-		JScrollPane scroll = new JScrollPane(textArea);
+		scroll = new JScrollPane(textArea);
 		
 		constraints.gridx = 0;		
  		constraints.gridy = 3;
@@ -239,12 +240,17 @@ public class GUIJuegoDePalabras extends JFrame {
 		bExit.addActionListener(listener);
 		bExit.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
+		bRestart = new JButton("Restart");
+		bRestart.addActionListener(listener);
+		bRestart.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		
 		bReset = new JButton("Reset Players");
 		bReset.addActionListener(listener);
 		bReset.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		pOptions.setLayout(new GridLayout(1,3, 50, 0));
 		pOptions.add(bReset);
+		pOptions.add(bRestart);
 		pOptions.add(bExit);
 		
 		constraints.gridx = 0;		
@@ -256,6 +262,23 @@ public class GUIJuegoDePalabras extends JFrame {
 		this.add(pOptions, constraints);	
 	}
 
+	
+	/*
+	 * Ends the current game and goes back to the starting interface where the user writes a player's name.
+	 */
+	private void restart() {
+		control = new ControlJuegoDePalabras();
+		
+		textArea.setText(filesManager.readPlayers());
+		//scroll = new JScrollPane(textArea);
+		scroll.revalidate();
+		scroll.repaint();
+		pMain.repaint();
+		
+		cardMain.show(pMain, "pStart");
+	}
+	
+	
 	
 	/**
 	 * Passes to the next series and starts showing the words.
@@ -272,7 +295,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		timerWords.start();
 		
 		
-		//pWriting.removeAll();
+		pWriting.removeAll();
 		pWords.removeAll();
 		pWords.setLayout(new GridBagLayout());
 		constraints.gridx = 0;		
@@ -323,7 +346,7 @@ public class GUIJuegoDePalabras extends JFrame {
 		timerWords.stop();
 		secondsLeft--;
 		
-		pStart.removeAll();
+		//pStart.removeAll();
 		pWords.removeAll();
 		pWriting.removeAll();
 		tLevel.revalidate();
@@ -432,7 +455,13 @@ public class GUIJuegoDePalabras extends JFrame {
 				line.setText("");
 				System.exit(0);
 				
-			}else if(e.getSource() == bFinishSeries) {/*Ends the writing stage of the current series.*/
+			}else if(e.getSource() == bRestart) { //Returns to starting screen where the user writes a player's name.
+				
+				timerWords.stop();
+				timerSecond.stop();
+				restart();
+				
+			}else if(e.getSource() == bFinishSeries) {//Ends the writing stage of the current series.
 				if ((control.checkGameState() == 0) && (control.getSeries() == 2)) {
 					JOptionPane.showMessageDialog(null, "¡Perdiste!");
 					System.exit(0);
