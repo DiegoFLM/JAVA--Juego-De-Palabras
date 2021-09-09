@@ -47,13 +47,11 @@ public class GUIJuegoDePalabras extends JFrame{
 	private JButton bReset, bExit, bFinishSeries, bRestart;
 	private GridBagConstraints constraints;
 	private CardLayout cardMain, cardGame;
-	private Titulos tGameTitle, tCurrentWord, tLevel, tSeries, tTime, tLetters;
+	private Titulos tGameTitle, tCurrentWord, tLevel, tSeries, tTime;
 	private ControlJuegoDePalabras control;
 	private String[] seriesWords;
-	//private char[] charArray;
 	private Listener listener;
-	//private KeyboardListener KeyboardListener;
-	private Timer timerWords, timerSecond;
+	private Timer timerWords;
 	private int intWordsCounter, secondsLeft;
 	private TimerPanel timerPanel;
 	
@@ -73,6 +71,8 @@ public class GUIJuegoDePalabras extends JFrame{
 		intWordsCounter = 0;
 	}
 	
+	
+	
 
 	/**
 	 * Initializes main components and shows the starting frame in which the user can see player's names with it's level and
@@ -86,7 +86,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		control = new ControlJuegoDePalabras();
 		seriesWords = new String[4];
 		listener = new Listener();
-		//KeyboardListener = new KeyboardListener();
 		
 		//JPanel Start
 		pStart = new JPanel();
@@ -159,7 +158,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		
 		//Timers
 		timerWords = new Timer(1000, listener);
-		//timerSecond = new Timer(1000, listener); // 100 s
 		
 		
 		//Writing interface
@@ -175,16 +173,7 @@ public class GUIJuegoDePalabras extends JFrame{
 		bFinishSeries = new JButton("Finalizar serie");
 		bFinishSeries.addActionListener(listener);
 		
-		timerPanel = new TimerPanel(10, this);
-		
-		//BETA WRITTEN LETTERS
-		/*pWrittenLetters = new JPanel();
-		pWrittenLetters.setLayout(new FlowLayout());
-		tLetters = new Titulos("LETRAS ", 30, new Color (110, 40, 100));
-		pWrittenLetters.add(tLetters);
-		charArray = new char[14];
-		char[] charArray = {'A', 'B', 'C', 'X'};
-		pWrittenLetters.addKeyListener(KeyboardListener);*/
+		timerPanel = new TimerPanel(20, this);
 		
 		
 		constraints.gridx = 0;		
@@ -203,14 +192,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		constraints.anchor = GridBagConstraints.CENTER;
 		pWriting.add(tSeries, constraints);
 		
-		/*constraints.gridx = 2;									ORIGINAL
- 		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.CENTER;
-		pWriting.add(tTime, constraints);*/
-		
 		
 		constraints.gridx = 2;		
  		constraints.gridy = 0;
@@ -221,8 +202,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		pWriting.add(timerPanel, constraints);
 		
 		
-		
-		
 		constraints.gridx = 1;		
  		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -230,8 +209,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;
 		pWriting.add(tfPlayerWord, constraints);
-		//pWriting.add(pWrittenLetters, constraints);
-		
 		
 		constraints.gridx = 1;		
  		constraints.gridy = 2;
@@ -296,41 +273,29 @@ public class GUIJuegoDePalabras extends JFrame{
 		this.add(pOptions, constraints);	
 	}
 
-	
-	public void terminaTimer() {
+	/* 
+	 * This method is used when the level time for writing words is over; 
+	 * it stops the timer and decides if there will be a next series or level, or the player lost on time. 
+	 * */
+	public void endTimer() {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				timerPanel.setTime(10);
-				//timerPanel.start();
-				//start.setEnabled(true);
-				
-				
-				
-				
+				timerPanel.setTime(20);
 				timerPanel.stop();
 				
-				if (control.getSeries() == 1){
-					nextSeries();
-				}else if (control.getSeries() == 2) {
-					switch (control.checkGameState()) {
-					case 0:
-						JOptionPane.showMessageDialog(null, "¡Perdiste!");
-						System.exit(0);
-						break;
+				switch (control.checkGameState()) {
+				case 0:
+					JOptionPane.showMessageDialog(null, "¡Perdiste!");
+					System.exit(0);
+					break;
 
-					case 1:
-						JOptionPane.showMessageDialog(null, "gameState: " + control.checkGameState());
-						nextSeries();
-						break;
-					}
+				case 1:
+					nextSeries();
+					break;
 				}
-				
-				
-			
-				
 				
 			}
 			
@@ -344,12 +309,13 @@ public class GUIJuegoDePalabras extends JFrame{
 		control = new ControlJuegoDePalabras();
 		
 		textArea.setText(filesManager.readPlayers());
-		//scroll = new JScrollPane(textArea);
 		scroll.revalidate();
 		scroll.repaint();
 		pMain.repaint();
 		
 		cardMain.show(pMain, "pStart");
+		line.setFocusable(true);
+		line.grabFocus();
 	}
 	
 	
@@ -358,13 +324,12 @@ public class GUIJuegoDePalabras extends JFrame{
 	 * Passes to the next series and starts showing the words.
 	 */
 	private void nextSeries(){
-		//timerSecond.stop();
 		seriesWords = control.nextSeries();
 		intWordsCounter = 0;
 		tCurrentWord = new Titulos(seriesWords[intWordsCounter], 60, new Color (0, 0, 0));
 		
 		if (control.getSeries() == 1) {
-			secondsLeft = 30;
+			timerPanel.setTime(20);
 		}
 		timerWords.start();
 		
@@ -385,7 +350,9 @@ public class GUIJuegoDePalabras extends JFrame{
 	}
 	
 	
-	/*Shows the next word of the series.*/
+	/*
+	 * Shows the next word of the series.
+	 * */
 	private void nextWord() {
 		intWordsCounter++;
 		tCurrentWord.revalidate();
@@ -418,9 +385,7 @@ public class GUIJuegoDePalabras extends JFrame{
 	 * */
 	private void writingInterface() {
 		timerWords.stop();
-		secondsLeft--;
-		
-		//pStart.removeAll();
+
 		pWords.removeAll();
 		pWriting.removeAll();
 		tLevel.revalidate();
@@ -433,16 +398,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		tSeries = new Titulos("Serie: " + control.getSeries() + "     ", 30, new Color (0, 0, 0));
 		tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
 		
-		//BETA
-		/*pWrittenLetters = new JPanel();
-		pWrittenLetters.setLayout(new FlowLayout());
-		pWrittenLetters.addKeyListener(KeyboardListener);
-		tLetters = new Titulos(String.valueOf(charArray), 30, new Color (110, 40, 100));
-		pWrittenLetters.add(tLetters);*/
-		
-		
-		
-		//timerSecond.start();
 		
 		constraints.gridx = 0;		
  		constraints.gridy = 0;
@@ -459,14 +414,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;
 		pWriting.add(tSeries, constraints);
-		
-		/*constraints.gridx = 2;								ORIGINAL
- 		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.CENTER;
-		pWriting.add(tTime, constraints);*/
 		
 		
 		constraints.gridx = 2;		
@@ -486,7 +433,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;
 		pWriting.add(tfPlayerWord, constraints);
-		//pWriting.add(pWrittenLetters, constraints);
 		
 		taRightWords.setText(control.getSeriesRightWords());
 		constraints.gridx = 1;		
@@ -510,9 +456,6 @@ public class GUIJuegoDePalabras extends JFrame{
 		
 		tfPlayerWord.setFocusable(true);
 		tfPlayerWord.grabFocus();
-		
-		/*pWrittenLetters.setFocusable(true);
-		pWrittenLetters.grabFocus();*/
 	}
 	
 	
@@ -550,15 +493,16 @@ public class GUIJuegoDePalabras extends JFrame{
 				filesManager.deletePlayers();
 				textArea.setText(filesManager.readPlayers());
 				line.setText("");
-				System.exit(0);
+				line.setFocusable(true);
+				line.grabFocus();
 				
 			}else if(e.getSource() == bRestart) { //Returns to starting screen where the user writes a player's name.
 				
 				timerWords.stop();
-				//timerSecond.stop();
 				restart();
 				
 			}else if(e.getSource() == bFinishSeries) {//Ends the writing stage of the current series.
+				timerPanel.stop();
 				if ((control.checkGameState() == 0) && (control.getSeries() == 2)) {
 					JOptionPane.showMessageDialog(null, "¡Perdiste!");
 					System.exit(0);
@@ -578,7 +522,6 @@ public class GUIJuegoDePalabras extends JFrame{
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							//timerPanel.setTime(5);
 							timerPanel.start();
 						}
 						
@@ -590,71 +533,8 @@ public class GUIJuegoDePalabras extends JFrame{
 				}
 				
 			}
-			/*else if(e.getSource() == timerSecond){ //A second has passed in the writing stage.
-				timerSecond.stop();
-				if (secondsLeft == 1) {
-					if (control.getSeries() == 1)
-						nextSeries();
-					if (control.getSeries() == 2) {
-						switch (control.checkGameState()) {
-						case 0:
-							JOptionPane.showMessageDialog(null, "¡Perdiste!");
-							System.exit(0);
-							break;
-
-						case 1:
-							JOptionPane.showMessageDialog(null, "gameState: " + control.checkGameState());
-							nextSeries();
-							break;
-						}
-					}
-				} else {
-					secondsLeft--;
-					tTime.revalidate();
-					pWriting.remove(tTime);
-					tTime = new Titulos("Tiempo: " + secondsLeft + "     ", 30, new Color (20, 40, 100));
-					
-					constraints.gridx = 2;		
-			 		constraints.gridy = 0;
-					constraints.gridwidth = 1;
-					constraints.gridheight = 1;
-					constraints.fill = GridBagConstraints.HORIZONTAL;
-					constraints.anchor = GridBagConstraints.CENTER;
-					pWriting.add(tTime, constraints);
-					
-					pWriting.repaint();
-					
-					//timerSecond.start();
-				}
-				
-			}*/
-			/*else if (e.getSource() == tfPlayerWord) {//The player just wrote a word.
-				timerSecond.stop();
-				switch (control.verifyWord(tfPlayerWord.getText().toUpperCase())) {
-				case 0:
-					tfPlayerWord.setText("");
-					timerSecond.start();
-					break;
-				
-				case 1:
-					taRightWords.setText(control.getSeriesRightWords());
-					tfPlayerWord.setText("");
-					timerSecond.start();
-					break;
-					
-				case 2:
-					//next Series
-					taRightWords.setText(control.getSeriesRightWords());
-					tfPlayerWord.setText("");
-					nextSeries();
-					break;
-					
-					
-				default:
-					JOptionPane.showMessageDialog(null, "none");
-					break;
-				}
-			}*/ 
+			
+			
 		}
 
 		@Override
@@ -677,7 +557,6 @@ public class GUIJuegoDePalabras extends JFrame{
 				case 1: //The writtenWord is right, but there are still words that haven't been written.
 					taRightWords.setText(control.getSeriesRightWords());
 					tfPlayerWord.setText("");
-					//timerSecond.start();
 					break;
 					
 				case 2:   //All the series words have been written.
@@ -702,48 +581,7 @@ public class GUIJuegoDePalabras extends JFrame{
 			
 		}
 	}
-
-
-
-
 	
-	
-	
-	/*private class KeyboardListener implements KeyListener{
-
-		@Override
-		public void keyTyped(KeyEvent keyTyped) {
-			// TODO Auto-generated method stub
-			//if (keyTyped.getKeyChar() == 'V' ) { //VK_BACK_SPACE
-			//}
-			
-			charArray[0] = keyTyped.getKeyChar();
-			writingInterface();
-		}
-
-		@Override
-		public void keyPressed(KeyEvent kp) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void keyReleased(KeyEvent kr) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		
-	}*/
-	
-	/*
-	 *  	VK_DELETE
-	 *  
-	 *  
-	 *  VK_INSERT
-	 *  VK_CLEAR
-	 *   	VK_UNDO
-	 *   VK_SUBTRACT*/
 	
 	
 }

@@ -91,7 +91,7 @@ public class TimerPanel extends JPanel implements Runnable {
 	private void timeUp(){
         stop();
         //myTimer.terminaTimer();    
-        gui.terminaTimer();
+        gui.endTimer();
 	}
 	
 	//inicia el subproceso
