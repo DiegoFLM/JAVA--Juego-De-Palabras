@@ -21,23 +21,44 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author paolajr-EISC
+ * The Class TimerPanel.
  *
+ * @author paolajr-EISC
+ * This class has been modified so MyTimer class was replaced by GUIJuegoDePalabras.
  */
 public class TimerPanel extends JPanel implements Runnable {
 
+	/** The width. */
 	private int width = 150;
+	
+	/** The height. */
 	private int height = 24;
 	
+	/** The time string. */
 	private String timeString="00:00";
+	
+	/** The time. */
 	private long time;
+	
+	/** The font. */
 	private Font font;
+	
+	/** The timer thread. */
 	private Thread timerThread;
+	
+	/** The gui. */
 	//private MyTimer myTimer;
 	private GUIJuegoDePalabras gui;
 	
 	
+	/**
+	 * Instantiates a new timer panel.
+	 *
+	 * @param time the time
+	 * @param guiJ the gui J
+	 */
 	public TimerPanel(long time, GUIJuegoDePalabras guiJ){
 		setTime(time);	
 		//this.myTimer = myTimer;
@@ -45,6 +66,11 @@ public class TimerPanel extends JPanel implements Runnable {
 		
 	}
 	
+	/**
+	 * Sets the time.
+	 *
+	 * @param time the new time
+	 */
 	public void setTime(long time) {
 		this.time = time;
 		//long h = time/3600;
@@ -59,18 +85,30 @@ public class TimerPanel extends JPanel implements Runnable {
 		repaint();
 	}
 	
+	/**
+	 * Paint component.
+	 *
+	 * @param g the g
+	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.drawString(timeString, 0, height);
 	}
 	
+	/**
+	 * Gets the preferred size.
+	 *
+	 * @return the preferred size
+	 */
 	public Dimension getPreferredSize(){
 		Dimension size = new Dimension(width, height);
 		return size;
 	}
    
-	//Tareas a ejecutar como subproceso
+	/**
+	 * Run. Tareas a ejecutar como subproceso
+	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -87,21 +125,28 @@ public class TimerPanel extends JPanel implements Runnable {
 		timeUp();
 	}
 	
-	//Termina el subproceso
+	/**
+	 * Time up. Termina el subproceso
+	 */
 	private void timeUp(){
         stop();
         //myTimer.terminaTimer();    
         gui.endTimer();
 	}
 	
-	//inicia el subproceso
+	/**
+	 * Start. inicia el subproceso
+	 */
 	public void start(){
 		stop();
 		timerThread = new Thread(this);
 		timerThread.start();
 	}
 	
-	//destruir el subproceso
+	/**
+	 * Stop. destruir el subproceso
+	 */
+	
 	public void stop(){
 		if(timerThread!=null) {
 			timerThread.interrupt();

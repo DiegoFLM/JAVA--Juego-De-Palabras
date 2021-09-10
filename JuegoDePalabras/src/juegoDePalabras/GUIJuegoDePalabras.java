@@ -34,8 +34,8 @@ import misComponentes.Titulos;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GUIJuegoDePalabras. GUIJuegoDePalabras hereda de JFrame, y hace uso de la clase Titulos 
- * que se encuentra en el proyecto MisComponentes.
+ * The Class GUIJuegoDePalabras. GUIJuegoDePalabras inherits from JFrame, and uses the Titulos class
+ * which is in MisComponentes project.
  */
 public class GUIJuegoDePalabras extends JFrame{
 	private JTextField line, tfPlayerWord;
@@ -79,7 +79,7 @@ public class GUIJuegoDePalabras extends JFrame{
 	 * write a name either present on the list or not. If the name written by the user is in the list, the game starts
 	 * in the level of the selected player's name, if not, starts in level 1.
 	 */
-	private void initGUI() {
+	public void initGUI() {
 		this.getContentPane().setLayout(new GridBagLayout());;
         constraints = new GridBagConstraints();
         
@@ -173,7 +173,8 @@ public class GUIJuegoDePalabras extends JFrame{
 		bFinishSeries = new JButton("Finalizar serie");
 		bFinishSeries.addActionListener(listener);
 		
-		timerPanel = new TimerPanel(20, this);
+		timerPanel = new TimerPanel(20 + (10 * Math.abs(control.getLevel())), this);
+		
 		
 		
 		constraints.gridx = 0;		
@@ -273,7 +274,7 @@ public class GUIJuegoDePalabras extends JFrame{
 		this.add(pOptions, constraints);	
 	}
 
-	/* 
+	/** 
 	 * This method is used when the level time for writing words is over; 
 	 * it stops the timer and decides if there will be a next series or level, or the player lost on time. 
 	 * */
@@ -283,13 +284,14 @@ public class GUIJuegoDePalabras extends JFrame{
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				timerPanel.setTime(20);
+				timerPanel.setTime(20 + (10 * Math.abs(control.getLevel())));
 				timerPanel.stop();
 				
 				switch (control.checkGameState()) {
 				case 0:
 					JOptionPane.showMessageDialog(null, "¡Perdiste!");
-					System.exit(0);
+					timerWords.stop();
+					restart();
 					break;
 
 				case 1:
@@ -302,10 +304,10 @@ public class GUIJuegoDePalabras extends JFrame{
 		});
 	}
 	
-	/*
+	/**
 	 * Ends the current game and goes back to the starting interface where the user writes a player's name.
 	 */
-	private void restart() {
+	public void restart() {
 		control = new ControlJuegoDePalabras();
 		
 		textArea.setText(filesManager.readPlayers());
@@ -323,13 +325,13 @@ public class GUIJuegoDePalabras extends JFrame{
 	/**
 	 * Passes to the next series and starts showing the words.
 	 */
-	private void nextSeries(){
+	public void nextSeries(){
 		seriesWords = control.nextSeries();
 		intWordsCounter = 0;
 		tCurrentWord = new Titulos(seriesWords[intWordsCounter], 60, new Color (0, 0, 0));
 		
 		if (control.getSeries() == 1) {
-			timerPanel.setTime(20);
+			timerPanel.setTime(20 + (10 * Math.abs(control.getLevel())));
 		}
 		timerWords.start();
 		
@@ -350,10 +352,10 @@ public class GUIJuegoDePalabras extends JFrame{
 	}
 	
 	
-	/*
+	/**
 	 * Shows the next word of the series.
 	 * */
-	private void nextWord() {
+	public void nextWord() {
 		intWordsCounter++;
 		tCurrentWord.revalidate();
 		tCurrentWord.repaint();
@@ -378,12 +380,12 @@ public class GUIJuegoDePalabras extends JFrame{
 	
 	
 
-	/*
+	/**
 	 * Shows the writing interface so the user can write the words he remembers, shows a list of the
 	 * right words written by the user in the current series, and shows the current level, series and the
 	 * remaining time for writing the words of the level. 
 	 * */
-	private void writingInterface() {
+	public void writingInterface() {
 		timerWords.stop();
 
 		pWords.removeAll();
@@ -469,7 +471,7 @@ public class GUIJuegoDePalabras extends JFrame{
 		/**
 		 * Action performed.
 		 *
-		 * @param e the e
+		 * @param e the action event.
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -505,7 +507,8 @@ public class GUIJuegoDePalabras extends JFrame{
 				timerPanel.stop();
 				if ((control.checkGameState() == 0) && (control.getSeries() == 2)) {
 					JOptionPane.showMessageDialog(null, "¡Perdiste!");
-					System.exit(0);
+					timerWords.stop();
+					restart();
 				}else {
 					nextSeries();
 				}
